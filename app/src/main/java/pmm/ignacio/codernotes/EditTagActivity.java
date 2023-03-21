@@ -3,7 +3,9 @@ package pmm.ignacio.codernotes;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +16,10 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pmm.ignacio.codernotes.db.AppDatabase;
+import pmm.ignacio.codernotes.db.Note;
 import pmm.ignacio.codernotes.db.Tag;
 import pmm.ignacio.codernotes.recyclerView.TagAdapter;
 
@@ -35,32 +39,60 @@ public class EditTagActivity extends AppCompatActivity {
 
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
-        appDatabase.tagDao().getAllTags()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tags -> {
-                    _tags = tags;
 
+
+            appDatabase.tagDao().getAllTags()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(tags -> {
+                        _tags = tags;
+
+                        RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
+                        recyclerView.setAdapter(new TagAdapter(_tags, new TagAdapter.TagClickListener() {
+                            @Override
+                            public void onTagEdit(int position) {
+                                Log.i(TAG, "Editing tag: " + _tags.get(position));
+                            }
+
+                            @Override
+                            public void onTagDelete(int position) {
+                                Log.i(TAG, "Deleting tag: " + _tags.get(position));
+                            }
+                        }));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(EditTagActivity.this));
+                    });
+        Consumer<Tag> tagConsumer = tag -> {
+            FloatingActionButton button = findViewById(R.id.add_tag_button);
+            button.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
+                builder.setTitle("Add Tag");
+                builder.setMessage("Enter the name of the tag");
+                final EditText input = new EditText(EditTagActivity.this);
+                builder.setView(input);
+                builder.setPositiveButton("Add", (dialog, which) -> {
+                    Log.i(TAG, "Adding tag");
+                    tag.tag = input.getText().toString();
+
+                    appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+
+                    _tags.add(tag);
                     RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
-                    recyclerView.setAdapter(new TagAdapter(_tags, new TagAdapter.TagClickListener() {
-                        @Override
-                        public void onTagEdit(int position) {
-                            Log.i(TAG, "Editing tag: " + _tags.get(position));
-                        }
-
-                        @Override
-                        public void onTagDelete(int position) {
-                            Log.i(TAG, "Deleting tag: " + _tags.get(position));
-                        }
-                    }));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(EditTagActivity.this));
+                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeInserted(_tags.size() - 1, 1);
                 });
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    // Cancelled
+                });
+                builder.show();
 
-        FloatingActionButton button = findViewById(R.id.add_tag_button);
-        button.setOnClickListener(v -> {
-            Log.i(TAG, "Adding new tag");
-        });
+            });
 
+        };
+
+        try {
+            tagConsumer.accept(new Tag());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
