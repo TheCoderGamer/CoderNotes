@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CoderNotes</string>
+    <string name="add">Add</string>
+    <string name="edit_note">Edit note</string>
+    <string name="delete_note">Delete note</string>
+    <string name="save">Save</string>
+    <string name="note">Note</string>
+    <string name="add_note">Add note</string>
+    <string name="titulo">Titulo</string>
+    <string name="save_note">Save note</string>
+</resources>
