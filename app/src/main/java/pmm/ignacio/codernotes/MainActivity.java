@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import io.reactivex.rxjava3.disposables.Disposable;
 import pmm.ignacio.codernotes.db.AppDatabase;
 import pmm.ignacio.codernotes.db.Note;
 
@@ -24,6 +22,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pmm.ignacio.codernotes.recyclerView.NoteAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notes -> {
                     _notes = notes;
-                    RecyclerView recyclerView = findViewById(R.id.recyclerview);
+                    RecyclerView recyclerView = findViewById(R.id.note_recyclerview);
                     recyclerView.setAdapter(new NoteAdapter(_notes, new NoteAdapter.NoteClickListener() {
                         @Override
                         public void onNoteEdit(int position) {
@@ -89,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_add_note) {
             createNoteInt();
+            return true;
+        } else if (item.getItemId() == R.id.menu_add_tag) {
+            Log.i(TAG, "Creating new tag");
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, EditTagActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

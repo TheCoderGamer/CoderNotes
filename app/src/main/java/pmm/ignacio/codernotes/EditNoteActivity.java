@@ -11,6 +11,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 import pmm.ignacio.codernotes.db.AppDatabase;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -29,6 +31,9 @@ public class EditNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
+
+        setTitle("Edit Note");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
 
@@ -88,5 +93,11 @@ public class EditNoteActivity extends AppCompatActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

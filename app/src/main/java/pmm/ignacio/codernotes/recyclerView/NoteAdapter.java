@@ -1,4 +1,4 @@
-package pmm.ignacio.codernotes;
+package pmm.ignacio.codernotes.recyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import pmm.ignacio.codernotes.R;
 import pmm.ignacio.codernotes.db.Note;
 
 
