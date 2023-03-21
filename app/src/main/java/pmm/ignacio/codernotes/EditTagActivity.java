@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pmm.ignacio.codernotes.db.AppDatabase;
-import pmm.ignacio.codernotes.db.Note;
 import pmm.ignacio.codernotes.db.Tag;
 import pmm.ignacio.codernotes.recyclerView.TagAdapter;
 
@@ -52,11 +51,41 @@ public class EditTagActivity extends AppCompatActivity {
                             @Override
                             public void onTagEdit(int position) {
                                 Log.i(TAG, "Editing tag: " + _tags.get(position));
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
+                                builder.setTitle("Edit Tag");
+                                builder.setMessage("Enter the name of the tag");
+                                final EditText input = new EditText(EditTagActivity.this);
+                                input.setText(_tags.get(position).tag);
+                                builder.setView(input);
+                                builder.setPositiveButton("Edit", (dialog, which) -> {
+                                    Log.i(TAG, "Editing tag");
+                                    Tag tag = _tags.get(position);
+                                    tag.tag = input.getText().toString();
+
+                                    appDatabase.tagDao().updateTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+
+                                    _tags.set(position, tag);
+                                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
+                                });
+                                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                                builder.show();
                             }
 
                             @Override
                             public void onTagDelete(int position) {
                                 Log.i(TAG, "Deleting tag: " + _tags.get(position));
+                                Tag tag = _tags.get(position);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
+                                builder.setTitle("Delete Tag");
+                                builder.setMessage("Are you sure you want to delete the tag " + tag.tag + "?");
+                                builder.setPositiveButton("Delete", (dialog, which) -> {
+                                    Log.i(TAG, "Deleting tag");
+                                    appDatabase.tagDao().deleteTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                                    _tags.remove(position);
+                                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(position);
+                                });
+                                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                                builder.show();
                             }
                         }));
                         recyclerView.setLayoutManager(new LinearLayoutManager(EditTagActivity.this));
@@ -79,9 +108,7 @@ public class EditTagActivity extends AppCompatActivity {
                     RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeInserted(_tags.size() - 1, 1);
                 });
-                builder.setNegativeButton("Cancel", (dialog, which) -> {
-                    // Cancelled
-                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
                 builder.show();
 
             });

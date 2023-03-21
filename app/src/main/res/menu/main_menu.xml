@@ -5,13 +5,13 @@
     <item
         android:id="@+id/menu_add_tag"
         android:title="@string/add_tag"
-        android:icon="@drawable/baseline_bookmark_add_24"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_baseline_bookmarks_24"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_add_note"
         android:icon="@drawable/ic_baseline_note_add_24"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/add_note" />
 
 </menu>
