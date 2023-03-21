@@ -83,7 +83,6 @@ public class EditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_save_note) {
-            Log.i(TAG, "Save note");
             findViewById(R.id.save_button).performClick();
             return true;
         } else {

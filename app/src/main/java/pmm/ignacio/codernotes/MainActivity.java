@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import io.reactivex.rxjava3.disposables.Disposable;
 import pmm.ignacio.codernotes.db.AppDatabase;
 import pmm.ignacio.codernotes.db.Note;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 });
 
-        Button button = findViewById(R.id.new_note_button);
+        FloatingActionButton button = findViewById(R.id.new_note_button);
         button.setOnClickListener(view -> {
             createNoteInt();
         });
