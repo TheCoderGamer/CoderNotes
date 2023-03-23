@@ -9,4 +9,15 @@
     <string name="titulo">Titulo</string>
     <string name="save_note">Save note</string>
     <string name="add_tag">Add tag</string>
+    <string name="edit_tag">Edit tag</string>
+    <string name="edit_tag_message">Enter the name of the tag</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_tag">Delete Tag</string>
+    <string name="delete_tag_message">Are you sure you want to delete the tag</string>
+    <string name="delete">Delete</string>
+    <string name="add_tag_message">Enter the name of the tag</string>
+    <string name="main_activity_title">Notes</string>
+    <string name="edit_tag_activity_title">Editing Tags</string>
+    <string name="edit_note_activity_title">Editing note</string>
 </resources>

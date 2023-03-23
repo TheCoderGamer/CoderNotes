@@ -36,7 +36,7 @@ public class EditTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_tag);
 
-        setTitle("Edit Tag");
+        setTitle(getString(R.string.edit_tag_activity_title));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
@@ -55,12 +55,12 @@ public class EditTagActivity extends AppCompatActivity {
                             public void onTagEdit(int position) {
                                 Log.i(TAG, "Editing tag: " + _tags.get(position));
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
-                                builder.setTitle("Edit Tag");
-                                builder.setMessage("Enter the name of the tag");
+                                builder.setTitle(getString(R.string.edit_tag));
+                                builder.setMessage(getString(R.string.edit_tag_message));
                                 final EditText input = new EditText(EditTagActivity.this);
                                 input.setText(_tags.get(position).tag);
                                 builder.setView(input);
-                                builder.setPositiveButton("Edit", (dialog, which) -> {
+                                builder.setPositiveButton(getString(R.string.edit), (dialog, which) -> {
                                     Log.i(TAG, "Editing tag");
                                     Tag tag = _tags.get(position);
                                     tag.tag = input.getText().toString();
@@ -70,7 +70,7 @@ public class EditTagActivity extends AppCompatActivity {
                                     _tags.set(position, tag);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
                                 });
-                                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                                builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                                 builder.show();
                             }
 
@@ -79,15 +79,15 @@ public class EditTagActivity extends AppCompatActivity {
                                 Log.i(TAG, "Deleting tag: " + _tags.get(position));
                                 Tag tag = _tags.get(position);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
-                                builder.setTitle("Delete Tag");
-                                builder.setMessage("Are you sure you want to delete the tag " + tag.tag + "?");
-                                builder.setPositiveButton("Delete", (dialog, which) -> {
+                                builder.setTitle(getString(R.string.delete_tag));
+                                builder.setMessage(getString(R.string.delete_tag_message) + " " + tag.tag + "?");
+                                builder.setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                                     Log.i(TAG, "Deleting tag");
                                     appDatabase.tagDao().deleteTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
                                     _tags.remove(position);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(position);
                                 });
-                                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                                builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                                 builder.show();
                             }
                         }));
@@ -97,11 +97,11 @@ public class EditTagActivity extends AppCompatActivity {
             FloatingActionButton button = findViewById(R.id.add_tag_button);
             button.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
-                builder.setTitle("Add Tag");
-                builder.setMessage("Enter the name of the tag");
+                builder.setTitle(getString(R.string.add_tag));
+                builder.setMessage(getString(R.string.add_tag_message));
                 final EditText input = new EditText(EditTagActivity.this);
                 builder.setView(input);
-                builder.setPositiveButton("Add", (dialog, which) -> {
+                builder.setPositiveButton(getString(R.string.add), (dialog, which) -> {
                     Log.i(TAG, "Adding tag");
                     tag.tag = input.getText().toString();
 
@@ -111,7 +111,7 @@ public class EditTagActivity extends AppCompatActivity {
                     RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeInserted(_tags.size() - 1, 1);
                 });
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                 builder.show();
 
             });

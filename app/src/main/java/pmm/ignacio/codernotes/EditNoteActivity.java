@@ -1,5 +1,6 @@
 package pmm.ignacio.codernotes;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,12 +28,13 @@ public class EditNoteActivity extends AppCompatActivity {
     public static final String NOTE_ID_KEY = "NOTE_ID";
 
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-        setTitle("Edit Note");
+        setTitle(getString(R.string.edit_note_activity_title));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;

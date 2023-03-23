@@ -1,5 +1,7 @@
 package pmm.ignacio.codernotes;
 
+// TODO: añadir chips en editar nota para poder vincular tags a la nota
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import pmm.ignacio.codernotes.db.AppDatabase;
 import pmm.ignacio.codernotes.db.Note;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle("Notes");
+        setTitle(getString(R.string.main_activity_title));
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
         appDatabase.noteDao().getAll()
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(() -> {
                                         _notes.remove(position);
-                                        recyclerView.getAdapter().notifyItemRemoved(position);
+                                        Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(position);
                                     });
                         }
                     }));
@@ -72,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         FloatingActionButton button = findViewById(R.id.new_note_button);
-        button.setOnClickListener(view -> {
-            createNoteInt();
-        });
+        button.setOnClickListener(view -> createNoteInt());
     }
 
     @Override
