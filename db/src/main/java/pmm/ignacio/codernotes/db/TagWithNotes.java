@@ -15,4 +15,11 @@ public class TagWithNotes {
             associateBy = @Junction(NoteTagCrossRef.class)
     )
     public List<Note> notes;
+
+    public TagWithNotes(Tag tag, List<Note> notes) {
+        this.tag = tag;
+        this.notes = notes;
+    }
+
+
 }

@@ -11,11 +11,12 @@ import java.util.List;
 
 import pmm.ignacio.codernotes.R;
 import pmm.ignacio.codernotes.db.Tag;
+import pmm.ignacio.codernotes.db.TagWithNotes;
 
 
 public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
 
-    private final List<Tag> _tags;
+    private final List<TagWithNotes> _tagsWithNotes;
     private final TagClickListener _tagClickListener;
 
     public interface TagClickListener {
@@ -24,8 +25,8 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
         void onTagDelete(int position);
     }
 
-    public TagAdapter(List<Tag> _tags, TagClickListener tagClickListener) {
-        this._tags = _tags;
+    public TagAdapter(List<TagWithNotes> tagsWithNotes, TagClickListener tagClickListener) {
+        this._tagsWithNotes = tagsWithNotes;
         _tagClickListener = tagClickListener;
     }
 
@@ -38,11 +39,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
-        holder.bind(_tags.get(position));
+        holder.bind(_tagsWithNotes.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return _tags.size();
+        return _tagsWithNotes.size();
     }
 }

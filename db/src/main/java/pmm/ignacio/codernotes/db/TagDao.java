@@ -36,4 +36,6 @@ public interface TagDao {
 
     @Delete
     Completable deleteTag(Tag tag);
+
+
 }

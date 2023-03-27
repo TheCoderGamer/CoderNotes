@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,13 +23,15 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pmm.ignacio.codernotes.db.AppDatabase;
+import pmm.ignacio.codernotes.db.Note;
 import pmm.ignacio.codernotes.db.Tag;
+import pmm.ignacio.codernotes.db.TagWithNotes;
 import pmm.ignacio.codernotes.recyclerView.TagAdapter;
 
 public class EditTagActivity extends AppCompatActivity {
 
     private static final String TAG = EditTagActivity.class.getName();
-    private List<Tag> _tags;
+    private List<TagWithNotes> _tagsWithNotes;
 
     @SuppressLint("CheckResult")
     @Override
@@ -43,31 +46,33 @@ public class EditTagActivity extends AppCompatActivity {
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
 
 
-            appDatabase.tagDao().getAllTags()
+            appDatabase.tagDao().getTagsWithNotes()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(tags -> {
-                        _tags = tags;
+                    .subscribe(tagWithNotes -> {
+                        _tagsWithNotes = tagWithNotes;
 
+                        // Esto tiene que estar en este hilo ?
                         RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
-                        recyclerView.setAdapter(new TagAdapter(_tags, new TagAdapter.TagClickListener() {
+                        recyclerView.setAdapter(new TagAdapter(_tagsWithNotes, new TagAdapter.TagClickListener() {
+                            // ---
                             @Override
                             public void onTagEdit(int position) {
-                                Log.i(TAG, "Editing tag: " + _tags.get(position));
+                                Log.i(TAG, "Editing tag: " + _tagsWithNotes.get(position));
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
                                 builder.setTitle(getString(R.string.edit_tag));
                                 builder.setMessage(getString(R.string.edit_tag_message));
                                 final EditText input = new EditText(EditTagActivity.this);
-                                input.setText(_tags.get(position).tag);
+                                input.setText(_tagsWithNotes.get(position).tag.tag);
                                 builder.setView(input);
                                 builder.setPositiveButton(getString(R.string.edit), (dialog, which) -> {
                                     Log.i(TAG, "Editing tag");
-                                    Tag tag = _tags.get(position);
-                                    tag.tag = input.getText().toString();
+                                    TagWithNotes tagWithNote = _tagsWithNotes.get(position);
+                                    tagWithNote.tag.tag = input.getText().toString();
 
-                                    appDatabase.tagDao().updateTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                                    appDatabase.tagDao().updateTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
 
-                                    _tags.set(position, tag);
+                                    _tagsWithNotes.set(position, tagWithNote);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
                                 });
                                 builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
@@ -76,15 +81,15 @@ public class EditTagActivity extends AppCompatActivity {
 
                             @Override
                             public void onTagDelete(int position) {
-                                Log.i(TAG, "Deleting tag: " + _tags.get(position));
-                                Tag tag = _tags.get(position);
+                                Log.i(TAG, "Deleting tag: " + _tagsWithNotes.get(position));
+                                TagWithNotes tagWithNote = _tagsWithNotes.get(position);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
                                 builder.setTitle(getString(R.string.delete_tag));
-                                builder.setMessage(getString(R.string.delete_tag_message) + " " + tag.tag + "?");
+                                builder.setMessage(getString(R.string.delete_tag_message) + " " + tagWithNote.tag + "?");
                                 builder.setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                                     Log.i(TAG, "Deleting tag");
-                                    appDatabase.tagDao().deleteTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
-                                    _tags.remove(position);
+                                    appDatabase.tagDao().deleteTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                                    _tagsWithNotes.remove(position);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(position);
                                 });
                                 builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
@@ -107,9 +112,11 @@ public class EditTagActivity extends AppCompatActivity {
 
                     appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
 
-                    _tags.add(tag);
+                    _tagsWithNotes.add(new TagWithNotes(tag, new ArrayList<>()) {
+                    });
+
                     RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
-                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeInserted(_tags.size() - 1, 1);
+                    Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRangeInserted(_tagsWithNotes.size() - 1, 1);
                 });
                 builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                 builder.show();

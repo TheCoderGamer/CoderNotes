@@ -6,7 +6,7 @@
     <string name="save">Save</string>
     <string name="note">Note</string>
     <string name="add_note">Add note</string>
-    <string name="titulo">Titulo</string>
+    <string name="title">Title</string>
     <string name="save_note">Save note</string>
     <string name="add_tag">Add tag</string>
     <string name="edit_tag">Edit tag</string>
@@ -20,4 +20,5 @@
     <string name="main_activity_title">Notes</string>
     <string name="edit_tag_activity_title">Editing Tags</string>
     <string name="edit_note_activity_title">Editing note</string>
+    <string name="new_note_activity_title">New note</string>
 </resources>

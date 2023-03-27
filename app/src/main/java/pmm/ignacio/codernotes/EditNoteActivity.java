@@ -34,7 +34,9 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
-        setTitle(getString(R.string.edit_note_activity_title));
+        int noteId = getIntent().getIntExtra(NOTE_ID_KEY, 0);
+
+        setTitle(noteId > 0 ? getString(R.string.edit_note_activity_title) : getString(R.string.new_note_activity_title));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
@@ -68,9 +70,9 @@ public class EditNoteActivity extends AppCompatActivity {
             });
         };
 
-        int studentId = getIntent().getIntExtra(NOTE_ID_KEY, 0);
-        if (studentId > 0) {
-            appDatabase.noteDao().find(studentId).subscribeOn(Schedulers.io()).subscribe(noteConsumer);
+
+        if (noteId > 0) {
+            appDatabase.noteDao().find(noteId).subscribeOn(Schedulers.io()).subscribe(noteConsumer);
         } else {
             try {
                 noteConsumer.accept(new Note());
