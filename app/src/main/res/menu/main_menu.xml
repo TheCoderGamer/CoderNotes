@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_add_tag"
+        android:id="@+id/menu_edit_tags"
         android:title="@string/add_tag"
         android:icon="@drawable/ic_baseline_bookmarks_24"
         app:showAsAction="ifRoom" />

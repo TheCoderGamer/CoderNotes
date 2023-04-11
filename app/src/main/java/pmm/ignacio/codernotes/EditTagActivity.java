@@ -23,7 +23,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pmm.ignacio.codernotes.db.AppDatabase;
-import pmm.ignacio.codernotes.db.Note;
 import pmm.ignacio.codernotes.db.Tag;
 import pmm.ignacio.codernotes.db.TagWithNotes;
 import pmm.ignacio.codernotes.recyclerView.TagAdapter;
@@ -52,7 +51,7 @@ public class EditTagActivity extends AppCompatActivity {
                     .subscribe(tagWithNotes -> {
                         _tagsWithNotes = tagWithNotes;
 
-                        // Esto tiene que estar en este hilo ?
+                        // TODO: Esto tiene que estar en este hilo ?
                         RecyclerView recyclerView = findViewById(R.id.tag_recyclerview);
                         recyclerView.setAdapter(new TagAdapter(_tagsWithNotes, new TagAdapter.TagClickListener() {
                             // ---
@@ -146,7 +145,7 @@ public class EditTagActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_add_tag) {
+        if (item.getItemId() == R.id.menu_edit_tags) {
             findViewById(R.id.add_tag_button).performClick();
             return true;
         }

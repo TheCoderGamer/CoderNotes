@@ -9,4 +9,5 @@ public class NoteTagCrossRef {
     public int noteId;
     @ColumnInfo(index = true)
     public int tagId;
+
 }

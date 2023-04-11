@@ -21,4 +21,7 @@
     <string name="edit_tag_activity_title">Editing Tags</string>
     <string name="edit_note_activity_title">Editing note</string>
     <string name="new_note_activity_title">New note</string>
+    <string name="add_tag_dialog_title">Add tag</string>
+    <string name="add_tag_dialog_message">Create new tag for the note</string>
+    <string name="create">Create</string>
 </resources>

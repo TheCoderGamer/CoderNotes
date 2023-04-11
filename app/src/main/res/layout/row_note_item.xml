@@ -7,18 +7,19 @@
 
     <TextView
         android:id="@+id/note"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="227dp"
+        android:layout_height="27dp"
         android:layout_marginStart="8dp"
+        android:lines="1"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tag_button_details"
+        app:layout_constraintEnd_toStartOf="@+id/note_button_details"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_weight="25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Este es un texto largo para ver si cabe bien en el text view"
+        tools:text="texto largo texto largo texto largo texto largo"
         />
 
 

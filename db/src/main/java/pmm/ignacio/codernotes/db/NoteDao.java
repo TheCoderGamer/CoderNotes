@@ -31,8 +31,14 @@ public interface NoteDao {
     @Insert
     Completable insertNote(Note note);
 
+    @Insert
+    Completable insertNoteTagCrossRef(NoteTagCrossRef noteTagCrossRef);
+
     @Update
     Completable updateNote(Note note);
+
+    @Update
+    Completable updateNoteTagCrossRef(List<NoteTagCrossRef> noteTagCrossRefs);
 
     @Delete
     Completable deleteNote(Note note);
