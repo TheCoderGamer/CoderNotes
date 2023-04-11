@@ -1,6 +1,5 @@
 package pmm.ignacio.codernotes;
 
-// TODO: añadir chips en editar nota para poder vincular tags a la nota
 // TODO: comprobar porque da errores con el recycler y con otra cosa (no peta)
 
 import android.annotation.SuppressLint;
@@ -95,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Creating new tag");
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, EditTagActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (item.getItemId() == R.id.menu_search) {
+            Log.i(TAG, "Searching");
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, SearchActivity.class);
             startActivity(intent);
             return true;
         }

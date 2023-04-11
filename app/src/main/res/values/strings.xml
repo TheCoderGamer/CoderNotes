@@ -24,4 +24,6 @@
     <string name="add_tag_dialog_title">Add tag</string>
     <string name="add_tag_dialog_message">Create new tag for the note</string>
     <string name="create">Create</string>
+    <string name="search">Search</string>
+    <string name="input_search">Input Search</string>
 </resources>

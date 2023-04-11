@@ -123,14 +123,14 @@ public class EditNoteActivity extends AppCompatActivity {
                 if (note.noteId > 0) {
                     // - Update note -
                     Log.d(TAG, "CrossRef " + noteTagCrossRefs);
-//                    appDatabase.noteDao().updateNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-                    appDatabase.noteDao().updateNoteTagCrossRef(noteTagCrossRefs).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+                    appDatabase.noteDao().updateNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+//                    appDatabase.noteDao().updateNoteTagCrossRef(noteTagCrossRefs).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
                 } else {
                     // - Insert note -
-//                    appDatabase.noteDao().insertNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-                    for (NoteTagCrossRef noteTagCrossRef : noteTagCrossRefs) {
-                        appDatabase.noteDao().insertNoteTagCrossRef(noteTagCrossRef).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-                    }
+                    appDatabase.noteDao().insertNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+//                    for (NoteTagCrossRef noteTagCrossRef : noteTagCrossRefs) {
+//                        appDatabase.noteDao().insertNoteTagCrossRef(noteTagCrossRef).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+//                    }
                 }
             });
         };
