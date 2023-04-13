@@ -24,6 +24,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:contentDescription="@string/add_tag"
+        app:backgroundTint="@color/paper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_bookmark_add_24"
