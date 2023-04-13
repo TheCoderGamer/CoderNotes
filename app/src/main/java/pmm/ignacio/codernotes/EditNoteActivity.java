@@ -30,6 +30,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import pmm.ignacio.codernotes.db.Note;
 import pmm.ignacio.codernotes.db.NoteTagCrossRef;
 import pmm.ignacio.codernotes.db.NoteWithTags;
+import pmm.ignacio.codernotes.db.NotesWithTagsDao;
 import pmm.ignacio.codernotes.db.Tag;
 import pmm.ignacio.codernotes.db.TagWithNotes;
 
@@ -60,19 +61,17 @@ public class EditNoteActivity extends AppCompatActivity {
 
         appDatabase = ((RoomApplication) getApplication()).appDatabase;
         // Get all tags
-        appDatabase.tagDao().getAllTags().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(tags -> {
+        appDatabase.tagsDao().getAll().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(tags -> {
             _allTags = tags;
             // Get selected tags of the note
-            appDatabase.noteDao().findWithTags(noteId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).onErrorResumeNext(error -> {
-                // return an empty note with empty tags
-                return Single.just(new NoteWithTags());
-            }).subscribe(noteWithTags -> {
-                _selectedTags = noteWithTags.tags;
-                if (_selectedTags == null) {
-                    _selectedTags = new ArrayList<>();
-                }
+            if (noteId > 0) {
+                appDatabase.notesDao().findWithTags(noteId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(noteWithTags -> {
+                    _selectedTags = noteWithTags.tags;
+                    createChipGroup();
+                });
+            } else {
                 createChipGroup();
-            });
+            }
         });
 
 
@@ -89,28 +88,9 @@ public class EditNoteActivity extends AppCompatActivity {
                 note.note = editNoteText.getText().toString();
                 note.title = editNoteTitle.getText().toString();
 
-
-
-                // TODO: vincular tags
-                // TODO: _selectedTags tiene las tags seleccionadas
-                // TODO: _allTags tiene todas las tags
-
-
-                // Link tags
-                List<NoteTagCrossRef> noteTagCrossRefs = new ArrayList<>();
-                for (Tag tag : _selectedTags) {
-                    Log.d(TAG, "Vinculando tag: " + tag.tag);
-                    NoteTagCrossRef noteTagCrossRef = new NoteTagCrossRef();
-                    // Create the new tags
-                    if (_allTags.stream().noneMatch(t -> t.tag.equals(tag.tag))) {
-                        appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).subscribe();
-                        // TODO: como obtengo el id de la nueva tag?
-                    }
-                    noteTagCrossRef.noteId = note.noteId;
-                    noteTagCrossRef.tagId = tag.tagId;
-                    noteTagCrossRefs.add(noteTagCrossRef);
-                }
-
+                NoteWithTags noteWithTags = new NoteWithTags();
+                noteWithTags.note = note;
+                noteWithTags.tags = _selectedTags;
 
                 Action navigateToMainActivityAction = () -> {
                     Intent intent = new Intent();
@@ -122,22 +102,20 @@ public class EditNoteActivity extends AppCompatActivity {
                 Log.i(TAG, "Saving note: " + note);
                 if (note.noteId > 0) {
                     // - Update note -
-                    Log.d(TAG, "CrossRef " + noteTagCrossRefs);
-                    appDatabase.noteDao().updateNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-//                    appDatabase.noteDao().updateNoteTagCrossRef(noteTagCrossRefs).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+                    appDatabase.notesWithTagsDao().updateNoteWithTags(noteWithTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+
+//                    appDatabase.noteDao().updateNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
                 } else {
                     // - Insert note -
-                    appDatabase.noteDao().insertNote(note).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-//                    for (NoteTagCrossRef noteTagCrossRef : noteTagCrossRefs) {
-//                        appDatabase.noteDao().insertNoteTagCrossRef(noteTagCrossRef).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
-//                    }
+                    appDatabase.notesWithTagsDao().insertNoteWithTags(noteWithTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(navigateToMainActivityAction);
+
                 }
             });
         };
 
 
         if (noteId > 0) {
-            appDatabase.noteDao().find(noteId).subscribeOn(Schedulers.io()).subscribe(noteConsumer);
+            appDatabase.notesDao().find(noteId).subscribeOn(Schedulers.io()).subscribe(noteConsumer);
         } else {
             try {
                 noteConsumer.accept(new Note());
@@ -188,6 +166,7 @@ public class EditNoteActivity extends AppCompatActivity {
     private void CreateNewTag(String tagName) {
         Tag tag = new Tag();
         tag.tag = tagName;
+        tag.tagId = 0;
         _selectedTags.add(tag);
         _allTags.add(tag);
         // appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
@@ -197,11 +176,15 @@ public class EditNoteActivity extends AppCompatActivity {
         // Create chips tags
         chipGroup = findViewById(R.id.chip_tag_group);
         for (Tag tag : _allTags) {
-            Log.d(TAG, "Tag: " + tag.tag);
             Chip chip = new Chip(this);
             chip.setText(tag.tag);
             chip.setCheckable(true);
-            chip.setChecked(_selectedTags.contains(tag));
+            // Esto no es muy eficiente, pero es lo que hay
+            for (Tag selectedTag : _selectedTags) {
+                if (selectedTag.tagId == tag.tagId) {
+                    chip.setChecked(true);
+                }
+            }
             chip.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (b) {
                     _selectedTags.add(tag);

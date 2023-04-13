@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 @Dao
-public interface NoteDao {
+public interface NotesDao {
     @Query("SELECT * FROM notes")
     Single<List<Note>> getAll();
 
@@ -29,18 +29,11 @@ public interface NoteDao {
     Single<NoteWithTags> findWithTags(int noteId);
 
     @Insert
-    Completable insertNote(Note note);
-
-    @Insert
-    Completable insertNoteTagCrossRef(NoteTagCrossRef noteTagCrossRef);
+    Single<Long> insertNote(Note note);
 
     @Update
     Completable updateNote(Note note);
 
-    @Update
-    Completable updateNoteTagCrossRef(List<NoteTagCrossRef> noteTagCrossRefs);
-
     @Delete
     Completable deleteNote(Note note);
-
 }

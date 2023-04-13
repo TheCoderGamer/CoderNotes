@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity {
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
 
 
-        appDatabase.noteDao().getAll()
+        appDatabase.notesDao().getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notes -> {
@@ -67,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
                         public void onNoteDelete(int position) {
                             Log.i(TAG, "Deleting note: " + _notesFiltered.get(position));
                             Note note = _notesFiltered.get(position);
-                            appDatabase.noteDao().deleteNote(note)
+                            appDatabase.notesDao().deleteNote(note)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(() -> {

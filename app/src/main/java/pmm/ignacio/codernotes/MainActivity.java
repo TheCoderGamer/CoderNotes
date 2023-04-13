@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(getString(R.string.main_activity_title));
 
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
-        appDatabase.noteDao().getAll()
+        appDatabase.notesDao().getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notes -> {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onNoteDelete(int position) {
                             Log.i(TAG, "Deleting note: " + _notes.get(position));
                             Note note = _notes.get(position);
-                            appDatabase.noteDao().deleteNote(note)
+                            appDatabase.notesDao().deleteNote(note)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(() -> {
@@ -91,13 +91,11 @@ public class MainActivity extends AppCompatActivity {
             createNoteInt();
             return true;
         } else if (item.getItemId() == R.id.menu_edit_tags) {
-            Log.i(TAG, "Creating new tag");
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, EditTagActivity.class);
             startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.menu_search) {
-            Log.i(TAG, "Searching");
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, SearchActivity.class);
             startActivity(intent);

@@ -13,11 +13,12 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 @Dao
-public interface TagDao {
-    @Query("SELECT * FROM tags")
-    Single<List<Tag>> getAllTags();
+public interface TagsDao {
 
-    @Query("SELECT * FROM tags WHERE tagId = :tagId")
+    @Query("SELECT * FROM tags")
+    Single<List<Tag>> getAll();
+
+    @Query("SELECT * FROM Tags WHERE TagId = :tagId")
     Single<Tag> find(int tagId);
 
     @Transaction
@@ -25,17 +26,18 @@ public interface TagDao {
     Single<List<TagWithNotes>> getTagsWithNotes();
 
     @Transaction
-    @Query("SELECT * FROM tags WHERE tagId = :tagId")
-    Single<TagWithNotes> findWithNotes(int tagId);
+    @Query("SELECT * FROM tags WHERE TagId = :tagId")
+    Single<TagWithNotes> findWithTags(int tagId);
 
     @Insert
     Completable insertTag(Tag tag);
+
+    @Insert
+    Single<List<Long>> insertTags(List<Tag> tags);
 
     @Update
     Completable updateTag(Tag tag);
 
     @Delete
-    Completable deleteTag(Tag tag);
-
-
+    Completable deleteTag(Tag Tag);
 }

@@ -45,7 +45,7 @@ public class EditTagActivity extends AppCompatActivity {
         AppDatabase appDatabase = ((RoomApplication) getApplication()).appDatabase;
 
 
-            appDatabase.tagDao().getTagsWithNotes()
+            appDatabase.tagsDao().getTagsWithNotes()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(tagWithNotes -> {
@@ -69,7 +69,7 @@ public class EditTagActivity extends AppCompatActivity {
                                     TagWithNotes tagWithNote = _tagsWithNotes.get(position);
                                     tagWithNote.tag.tag = input.getText().toString();
 
-                                    appDatabase.tagDao().updateTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                                    appDatabase.tagsDao().updateTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
 
                                     _tagsWithNotes.set(position, tagWithNote);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
@@ -87,7 +87,7 @@ public class EditTagActivity extends AppCompatActivity {
                                 builder.setMessage(getString(R.string.delete_tag_message) + " " + tagWithNote.tag + "?");
                                 builder.setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                                     Log.i(TAG, "Deleting tag");
-                                    appDatabase.tagDao().deleteTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                                    appDatabase.tagsDao().deleteTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
                                     _tagsWithNotes.remove(position);
                                     Objects.requireNonNull(recyclerView.getAdapter()).notifyItemRemoved(position);
                                 });
@@ -109,7 +109,7 @@ public class EditTagActivity extends AppCompatActivity {
                     Log.i(TAG, "Adding tag");
                     tag.tag = input.getText().toString();
 
-                    appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
+                    appDatabase.tagsDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
 
                     _tagsWithNotes.add(new TagWithNotes(tag, new ArrayList<>()) {
                     });
