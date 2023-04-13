@@ -84,7 +84,7 @@ public class EditTagActivity extends AppCompatActivity {
                                 TagWithNotes tagWithNote = _tagsWithNotes.get(position);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditTagActivity.this);
                                 builder.setTitle(getString(R.string.delete_tag));
-                                builder.setMessage(getString(R.string.delete_tag_message) + " " + tagWithNote.tag + "?");
+                                builder.setMessage(getString(R.string.delete_tag_message) + " " + tagWithNote.tag.tag + "?");
                                 builder.setPositiveButton(getString(R.string.delete), (dialog, which) -> {
                                     Log.i(TAG, "Deleting tag");
                                     appDatabase.tagsDao().deleteTag(tagWithNote.tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
