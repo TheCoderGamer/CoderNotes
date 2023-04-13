@@ -31,7 +31,7 @@ Hay varias pantallas:
 
 **Enlace a la release de github:** [Release](https://github.com/TheCoderGamer/CoderNotes/releases/tag/v1).
 
-**Enlace a el commit de github:** [Commit]().
+**Enlace a el commit de github:** [Commit](https://github.com/TheCoderGamer/CoderNotes/commit/59383d2ced59199a6dcd4a84b049fb3f43c74d03).
 
 
 
