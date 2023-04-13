@@ -29,7 +29,7 @@ Hay varias pantallas:
 
 ## ENTREGA
 
-**Enlace a la release de github:** [Release]().
+**Enlace a la release de github:** [Release](https://github.com/TheCoderGamer/CoderNotes/releases/tag/v1).
 
 **Enlace a el commit de github:** [Commit]().
 
