@@ -95,7 +95,7 @@ public class SearchActivity extends AppCompatActivity {
             _notesFiltered.clear();
         }
         for (Note note : _notes) {
-            if (note.title.contains(searchText) || note.note.contains(searchText)) {
+            if (note.title.toLowerCase().contains(searchText.toLowerCase()) || note.note.toLowerCase().contains(searchText.toLowerCase())) {
                 Objects.requireNonNull(_notesFiltered).add(note);
             }
         }

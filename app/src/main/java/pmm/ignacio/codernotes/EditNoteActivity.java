@@ -169,12 +169,12 @@ public class EditNoteActivity extends AppCompatActivity {
         tag.tagId = 0;
         _selectedTags.add(tag);
         _allTags.add(tag);
-        // appDatabase.tagDao().insertTag(tag).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe();
     }
 
     private void createChipGroup() {
         // Create chips tags
         chipGroup = findViewById(R.id.chip_tag_group);
+        chipGroup.removeAllViews();
         for (Tag tag : _allTags) {
             Chip chip = new Chip(this);
             chip.setText(tag.tag);
