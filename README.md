@@ -2,6 +2,7 @@
 
 ## DESCRIPCIÓN
 CoderNotes es una aplicación para la creación y organización de notas en tu dispositivo Android. Con CoderNotes, puedes crear notas de texto fácilmente. Además, puedes etiquetar tus notas para organizarlas y encontrarlas rápidamente. La aplicación también cuenta con una práctica función de búsqueda que te permite buscar notas por título o contenido.
+Ademas la aplicacion tiene tema oscuro, ema claro y splash screen al inicio.
 
 
 ### Pantallas
